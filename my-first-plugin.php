@@ -179,6 +179,27 @@ add_action(
     'admin_init',
     'my_first_plugin_register_settings'
 );
+// اضافه کردن یک پیام به انتهای محتوای نوشته با استفاده از هوک
 
+function my_first_plugin_after_content($content) {
+
+    if (is_singular('post') && is_main_query() && in_the_loop()) {
+        $content .= '<p>ممنون که این نوشته را مطالعه کردید!</p>';
+    }
+
+    return $content;
+}
+
+add_filter('the_content', 'my_first_plugin_after_content');
+// تغییر عنوان نوشته
+function my_first_plugin_change_title($title,$post_id){
+    //فقط یک نکته درباره فیلتر عنوان: در بعضی شرایط، مثل عنوان‌های داخل منو یا ابزارک‌ها، ممکنه شرط‌های فعلی کافی نباشن. برای تمرین فعلی، اگر عنوان فقط در صفحه نوشته تکی تغییر می‌کنه، نتیجه قابل قبوله.
+    if (is_singular('post') && is_main_query() && in_the_loop()&&get_queried_object_id()===$post_id) {
+        $title = ' نفس بلاگ '.$title;
+    }
+
+    return $title;
+}
+add_filter('the_title', 'my_first_plugin_change_title',10,2);
 
  
