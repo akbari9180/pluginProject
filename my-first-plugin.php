@@ -6,7 +6,7 @@ Description: My first plugin
 Version: 1.0.0
 Author: Nafiseh
 */
-// وقتی پلاگین فعال شود یک پیام روی پنل مدیریت نشان میدهد
+// وقتی پلاگین فعال باشد یک پیام روی پنل مدیریت،هر وقت صفحه پیشخوان بارگذاری شود نشان میدهد
 function my_first_plugin_notice() {
 
     echo '<div class="notice notice-success is-dismissible">';
@@ -19,6 +19,30 @@ add_action(
     'admin_notices',
     'my_first_plugin_notice'
 );
+//نمایش پیام فقط بعد از فعالسازی نمایش بده
+
+// function my_first_plugin_activate() {
+//     update_option('my_first_plugin_show_notice', 'yes');
+// }
+
+// register_activation_hook(__FILE__, 'my_first_plugin_activate');
+
+
+// function my_first_plugin_notice() {
+
+//     if (get_option('my_first_plugin_show_notice') !== 'yes') {
+//         return;
+//     }
+
+//     echo '<div class="notice notice-success is-dismissible">';
+//     echo '<p>My First Plugin فعال شد!</p>';
+//     echo '</div>';
+
+//     delete_option('my_first_plugin_show_notice');
+// }
+
+// add_action('admin_notices', 'my_first_plugin_notice');
+
 //نمایش پیام هنگام فعالسازی پلاگین
 //این متد به وردپرس میگوبد وقتی افزونه من فعال شد تابع 
 // my_first_plugin_activate را اجرا کن
@@ -179,6 +203,79 @@ add_action(
     'admin_init',
     'my_first_plugin_register_settings'
 );
+// نمایش اطلاعات افزونه در سایت
+//مرحله اول:ساخت تابع نمایش اطلاعات تماس (ایمیل و شماره تلفن)
+
+function my_first_plugin_contact_info() {
+
+    $phone = get_option('my_phone', '');
+    $email = get_option('my_email', '');
+
+    if (empty($phone) && empty($email)) {
+        return '';
+    }
+
+    $output = '<div class="my-plugin-contact">';
+
+    if (!empty($phone)) {
+        $output .= '<p>شماره تماس: ' . esc_html($phone) . '</p>';
+    }
+
+    if (!empty($email)) {
+        $output .= '<p>ایمیل: ' . esc_html($email) . '</p>';
+    }
+
+    $output .= '</div>';
+
+    return $output;
+}
+//مرحله دوم:ساخت شورت کد
+
+function my_first_plugin_contact_shortcode() {
+    return my_first_plugin_contact_info();
+}
+
+add_shortcode(
+    'my_contact_info',
+    'my_first_plugin_contact_shortcode'
+);
+//مرحله سوم:قرار دادن شورت کد در هر برگه یا نوشته ای که میخواهی نمایش داده بشه [my_contact_info]
+// ***********************************************************
+//نمایش متن فوتر
+//مرحله اول : ساخت تابع نمایش متن فوتر
+function my_first_plugin_footer_text() {
+
+    $footer_text = get_option('my_footer_text', '');
+
+    if (empty($footer_text)) {
+        return '';
+    }
+
+    return '<div class="my-plugin-footer">'
+        . nl2br(esc_html($footer_text))
+        . '</div>';
+}
+//مرحله دوم : ساخت شورت کد
+
+add_shortcode(
+    'my_footer_text',
+    'my_first_plugin_footer_text'
+);
+//مرجله سوم : نمایش خودکار متن در فوتر سایت
+
+function my_first_plugin_display_footer_text() {
+
+    echo my_first_plugin_footer_text();
+
+}
+
+add_action(
+    'wp_footer',
+    'my_first_plugin_display_footer_text'
+);
+
+
+// ***********************************************************
 // اضافه کردن یک پیام به انتهای محتوای نوشته با استفاده از هوک
 
 function my_first_plugin_after_content($content) {
@@ -202,4 +299,21 @@ function my_first_plugin_change_title($title,$post_id){
 }
 add_filter('the_title', 'my_first_plugin_change_title',10,2);
 
- 
+//  **********************************************
+//اضافه کردن استایل به افزونه
+
+function my_first_plugin_enqueue_styles() {
+
+    wp_enqueue_style(
+        'my-first-plugin-style',
+        plugin_dir_url(__FILE__) . 'assets/style.css',
+        array(),
+        '1.0.0'
+    );
+
+}
+
+add_action(
+    'wp_enqueue_scripts',
+    'my_first_plugin_enqueue_styles'
+);

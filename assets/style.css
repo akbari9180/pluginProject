@@ -1,0 +1,15 @@
+
+.my-plugin-contact,
+.my-plugin-footer {
+    padding: 16px;
+    margin: 16px 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f9fafb;
+    color: #374151;
+    line-height: 1.9;
+}
+
+.my-plugin-contact p {
+    margin: 4px 0;
+}
