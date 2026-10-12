@@ -317,3 +317,85 @@ add_action(
     'wp_enqueue_scripts',
     'my_first_plugin_enqueue_styles'
 );
+// shorcode ساخت
+// شورت کدی که 5 نوشته آخر را در هر صفحه نمایش دهد
+
+// function my_first_plugin_latest_posts() {
+
+//     $posts = get_posts(array(
+//         'numberposts' => 5,
+//         'post_status' => 'publish',
+//         'post_type'   => 'post',
+//         'orderby'     => 'date',
+//         'order'       => 'DESC',
+//     ));
+
+//     if (empty($posts)) {
+//         return '<p>هنوز نوشته‌ای منتشر نشده است.</p>';
+//     }
+
+//     $output = '<ul class="my-plugin-latest-posts">';
+
+//     foreach ($posts as $post) {
+//         $output .= '<li>';
+//         $output .= '<a href="' . esc_url(get_permalink($post->ID)) . '">';
+//         $output .= esc_html(get_the_title($post->ID));
+//         $output .= '</a>';
+//         $output .= '</li>';
+//     }
+
+//     $output .= '</ul>';
+
+//     return $output;
+// }
+
+// add_shortcode(
+//     'latest_posts',
+//     'my_first_plugin_latest_posts'
+// );
+//شورت کدی که تعداد نوشته ها برای نمایش را از کاربر بگیرد
+
+function my_first_plugin_latest_posts($atts) {
+
+    $atts = shortcode_atts(
+        array(
+            'count' => 5,
+        ),
+        $atts,
+        'latest_posts'
+    );
+
+    $count = absint($atts['count']);
+    $count = max(1, min($count, 20));
+
+    $posts = get_posts(array(
+        'numberposts' => $count,
+        'post_status' => 'publish',
+        'post_type'   => 'post',
+        'orderby'     => 'date',
+        'order'       => 'DESC',
+    ));
+
+    if (empty($posts)) {
+        return '<p>هنوز نوشته‌ای منتشر نشده است.</p>';
+    }
+
+    $output = '<ul class="my-plugin-latest-posts">';
+
+    foreach ($posts as $post) {
+        $output .= '<li>';
+        $output .= '<a href="' . esc_url(get_permalink($post->ID)) . '">';
+        $output .= esc_html(get_the_title($post->ID));
+        $output .= '</a>';
+        $output .= '</li>';
+    }
+
+    $output .= '</ul>';
+
+    return $output;
+}
+
+add_shortcode(
+    'latest_posts',
+    'my_first_plugin_latest_posts'
+);

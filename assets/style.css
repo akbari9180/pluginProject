@@ -13,3 +13,28 @@
 .my-plugin-contact p {
     margin: 4px 0;
 }
+
+.my-plugin-latest-posts {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+.my-plugin-latest-posts li {
+    margin-bottom: 10px;
+}
+
+.my-plugin-latest-posts a {
+    display: block;
+    padding: 12px 16px;
+    color: #374151;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: background-color 0.2s ease;
+}
+
+.my-plugin-latest-posts a:hover {
+    background-color: #e5e7eb;
+}
