@@ -50,3 +50,135 @@ function my_first_plugin_deactivate() {
         'پلاگین غیرفعال شد'
     );
 }
+// ساخت منوی افزونه در پیشخوان
+function my_first_plugin_add_admin_menu() {
+
+    add_menu_page(
+        'تنظیمات افزونه من',
+        'افزونه من',
+        'manage_options',
+        'my-first-plugin',
+        'my_first_plugin_settings_page',
+        'dashicons-admin-generic',
+        25
+    );
+
+}
+
+add_action(
+    'admin_menu',
+    'my_first_plugin_add_admin_menu'
+);
+// محتوای صفحه افزونه من--> ساخت فرم تنطیمات
+function my_first_plugin_settings_page() {
+    ?>
+
+    <div class="wrap">
+        <h1>تنظیمات افزونه من</h1>
+
+        <form  method="post" action="options.php">
+            <?php settings_fields('my_first_plugin_settings_group'); ?>
+            <table class="form-table">
+
+                <tr>
+                    <th>
+                        <label for="my_phone">شماره تماس</label>
+                    </th>
+                    <td>
+                        <input
+                            type="text"
+                            id="my_phone"
+                            name="my_phone"
+                            class="regular-text"
+                            value="<?php echo esc_attr(get_option('my_phone', '')); ?>"
+                        >
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <label for="my_email">ایمیل</label>
+                    </th>
+                    <td>
+                        <input
+                            type="email"
+                            id="my_email"
+                            name="my_email"
+                            class="regular-text"
+                            value="<?php echo esc_attr(get_option('my_email', '')); ?>"
+                        >
+                    </td>
+                </tr>
+
+                <tr>
+                    <th>
+                        <label for="my_footer_text">متن فوتر</label>
+                    </th>
+                    <td>
+                        <textarea
+                            id="my_footer_text"
+                            name="my_footer_text"
+                            rows="4"
+                            class="large-text"
+                           >
+                        <?php echo esc_textarea(get_option('my_footer_text', '')); ?>
+                        </textarea>
+                    </td>
+                </tr>
+
+            </table>
+
+            <?php submit_button('ذخیره تنظیمات'); ?>
+
+        </form>
+    </div>
+
+    <?php
+}
+// setting API ثبت تنظیمات با
+
+function my_first_plugin_register_settings() {
+
+    register_setting(
+        'my_first_plugin_settings_group',
+        'my_phone',
+        //نوع داده و روش اعتبارسنجی را هم مشخص میکند.
+        array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_text_field',
+            'default' => ''
+        )
+    );
+
+    register_setting(
+        'my_first_plugin_settings_group',
+        'my_email',
+        //نوع داده و روش اعتبارسنجی را هم مشخص میکند.
+        array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_email',
+            'default' => ''
+        )
+    );
+
+    register_setting(
+        'my_first_plugin_settings_group',
+        'my_footer_text',
+        // متن فوتر، بسته به اینکه چه نوع محتوایی می‌خواهی مجاز باشد نوع داده و روش اعتبارسنجی را هم مشخص میکند.
+
+        array(
+            'type' => 'string',
+            'sanitize_callback' => 'sanitize_textarea_field',
+            'default' => ''
+        )
+    );
+
+}
+
+add_action(
+    'admin_init',
+    'my_first_plugin_register_settings'
+);
+
+
+ 
