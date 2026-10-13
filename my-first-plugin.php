@@ -399,3 +399,38 @@ add_shortcode(
     'latest_posts',
     'my_first_plugin_latest_posts'
 );
+// ساخت ابزارک کلاسیک
+
+class My_First_Plugin_Widget extends WP_Widget {
+
+    public function __construct() {
+        parent::__construct(
+            'my_first_plugin_widget',
+            'ابزارک افزونه من',
+            array(
+                'description' => 'نمایش یک پیام ساده در سایت'
+            )
+        );
+    }
+
+    public function widget($args, $instance) {
+        echo $args['before_widget'];
+
+        echo $args['before_title'];
+        echo 'پیام افزونه من';
+        echo $args['after_title'];
+
+        echo '<p>به سایت من خوش آمدید!</p>';
+
+        echo $args['after_widget'];
+    }
+}
+
+function my_first_plugin_register_widget() {
+    register_widget('My_First_Plugin_Widget');
+}
+
+add_action(
+    'widgets_init',
+    'my_first_plugin_register_widget'
+);
