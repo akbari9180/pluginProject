@@ -412,18 +412,68 @@ class My_First_Plugin_Widget extends WP_Widget {
             )
         );
     }
+   
+//میخوایم کاری کنیم که عنوان و متن ابزارک از پیشخوان دریافت بشه 
+    
+public function widget($args, $instance) {
+    $title = !empty($instance['title'])
+        ? $instance['title']
+        : 'پیام افزونه من';
 
-    public function widget($args, $instance) {
-        echo $args['before_widget'];
+    $message = !empty($instance['message'])
+        ? $instance['message']
+        : 'به سایت من خوش آمدید!';
 
-        echo $args['before_title'];
-        echo 'پیام افزونه من';
-        echo $args['after_title'];
+    echo $args['before_widget'];
 
-        echo '<p>به سایت من خوش آمدید!</p>';
+    echo $args['before_title'];
+    echo esc_html($title);
+    echo $args['after_title'];
 
-        echo $args['after_widget'];
-    }
+    echo '<p>' . esc_html($message) . '</p>';
+
+    echo $args['after_widget'];
+}
+
+public function form($instance) {
+    $title = !empty($instance['title'])
+        ? $instance['title']
+        : 'پیام افزونه من';
+
+    $message = !empty($instance['message'])
+        ? $instance['message']
+        : 'به سایت من خوش آمدید!';
+
+    ?>
+    <p>
+        <label for="<?php echo esc_attr($this->get_field_id('title')); ?>">
+            عنوان:
+        </label>
+
+        <input
+            class="widefat"
+            id="<?php echo esc_attr($this->get_field_id('title')); ?>"
+            name="<?php echo esc_attr($this->get_field_name('title')); ?>"
+            type="text"
+            value="<?php echo esc_attr($title); ?>"
+        >
+    </p>
+
+    <p>
+        <label for="<?php echo esc_attr($this->get_field_id('message')); ?>">
+            متن پیام:
+        </label>
+
+        <textarea
+            class="widefat"
+            id="<?php echo esc_attr($this->get_field_id('message')); ?>"
+            name="<?php echo esc_attr($this->get_field_name('message')); ?>"
+            rows="4"
+        ><?php echo esc_textarea($message); ?></textarea>
+    </p>
+    <?php
+}
+
 }
 
 function my_first_plugin_register_widget() {
