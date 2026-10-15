@@ -95,12 +95,18 @@ add_action(
 );
 // محتوای صفحه افزونه من--> ساخت فرم تنطیمات
 function my_first_plugin_settings_page() {
+    // کد امنیتی برای بررسی سطح دسترسی
+    //بررسی میکنه کاربر اجازه مدیریت تنظیمات وردپرس را دارد یاخیر
+    if (!current_user_can('manage_options')) {
+        return;
+    }
     ?>
 
     <div class="wrap">
         <h1>تنظیمات افزونه من</h1>
 
         <form  method="post" action="options.php">
+            <!-- Nonce فیلدهای امنیتی لازم برای این مسیر را تولید میکنه، ازجمله -->
             <?php settings_fields('my_first_plugin_settings_group'); ?>
             <table class="form-table">
 
@@ -473,6 +479,22 @@ public function form($instance) {
     </p>
     <?php
 }
+//اگر بخواهیم تنظیمات ویجت را بصورت اختصاصی پاکسازی و اعتبارسجی کنیم(امنیتی)
+public function update($new_instance, $old_instance) {
+
+    $instance = array();
+
+    $instance['title'] = sanitize_text_field(
+        $new_instance['title'] ?? ''
+    );
+
+    $instance['message'] = sanitize_textarea_field(
+        $new_instance['message'] ?? ''
+    );
+
+    return $instance;
+}
+
 
 }
 
